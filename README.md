@@ -1,11 +1,12 @@
 # fahimfarook.me
 
-Personal profile website for Fahim Farook, built with [JBake](https://jbake.org/) and Maven.
+Personal profile website of Fahim Farook
 
 ## Prerequisites
 
-- Java 8+ (tested with Java 17+)
-- Maven 3.6+ (Maven Wrapper included)
+Tested with:
+- Java 25+
+- Maven 3.9+
 
 ## Build
 
@@ -25,14 +26,14 @@ Run a local dev server with live reload:
 ./mvnw jbake:inline -Djbake.port=8020
 
 ```
-Then open [http://localhost:8820](http://localhost:8820) in your browser.
+Then open [http://localhost:8820](http://localhost:8820) in the browser.
 
 ## Theme Switching
 
 Two themes are available:
 
-- **tufte** - Tufte-inspired, ET Book serif, warm off-white background, purple accents
-- **crimson** - Crafting Interpreters-inspired, Crimson Pro serif, blue accents, clean white
+- **tufte** - Tufte-inspired, ET Book serif, warm off-white background, purple accents. This is based on my old [Jekyll blog's](https://fahimfarookme.gumroad.com/l/WDdYlR) theme. 
+- **crimson** - My new theme - Crimson Pro serif, same purple blue accents, clean white
 
 Switch themes by editing `src/main/jbake/jbake.properties`:
 
@@ -41,8 +42,6 @@ site.theme=tufte
 # or
 site.theme=crimson
 ```
-
-Then rebuild.
 
 ## Adding a Blog Post
 
@@ -53,40 +52,27 @@ title=Your Post Title
 date=2026-04-01
 type=post
 tags=distributed-systems, architecture
-status=published
+status=published|draft
 ~~~~~~
-Your post content here in Markdown.
+Post content goes here in Markdown. I plan to add org-mode support when I find some time, insha Allah.
 ```
 
 2. Rebuild: `./mvnw jbake:generate`
 
-## Deploy to Cloudflare Pages
+## Deployment (CI/CD)
 
-1. Build: `./mvnw jbake:generate`
-2. In Cloudflare Pages, set the output directory to the contents of `target/site/`
-3. Or use `wrangler pages deploy target/site/`
+CI/CD is via GitHub Actions + Cloudflare Pages. Follow [git-flow](https://nvie.com/posts/a-successful-git-branching-model/)
 
-## Project Structure
+**Branches (Gitflow):**
+- `develop` — integration branch. Push here triggers preview deploy.
+- `master` — production. Only tagged releases deploy to production.
+- `feature/*` — work branches, merged into develop via PR.
 
-```
-src/main/jbake/
-├── assets/
-│   ├── css/
-│   │   ├── tufte.css          # Theme 1: Tufte-inspired
-│   │   ├── crimson.css        # Theme 2: Crafting Interpreters-inspired
-│   │   └── fonts.css          # ET Book font definitions
-│   └── fonts/et-book/         # Self-hosted ET Book font files
-├── content/
-│   ├── index.md               # Home page
-│   ├── profile.md             # Full profile/about page
-│   ├── writing.md             # Blog listing (placeholder)
-│   ├── contact.md             # Contact info
-│   └── blog/                  # Future blog posts go here
-└── templates/
-    ├── page.ftl               # Standard page layout
-    ├── index.ftl              # Home page layout (custom hero)
-    ├── post.ftl               # Blog post layout
-    ├── header.ftl             # <head> section (theme-aware)
-    ├── footer.ftl             # Site footer
-    └── menu.ftl               # Navigation
-```
+**Workflow:**
+- PR merge to `develop` → deploys to preview: `https://develop.fahimfarookme.pages.dev`
+- Merge `develop` to `master`, tag with `vYYYY.MM.DD` → deploys to `https://www.fahimfarook.me`
+
+
+**Required GitHub Secrets:**
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_API_TOKEN`
