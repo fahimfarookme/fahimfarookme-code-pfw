@@ -1,0 +1,7 @@
+# Cloudflare Pages redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Feed aliases
+/rss        /feed.xml       301
+/rss.xml    /feed.xml       301
+/atom.xml   /feed.xml       301
