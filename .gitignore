@@ -1,0 +1,8 @@
+target/
+.jbake-cache/
+*.class
+*.log
+.idea/
+*.iml
+.DS_Store
+.env

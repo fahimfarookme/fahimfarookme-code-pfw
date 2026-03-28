@@ -1,0 +1,1076 @@
+/* ==========================================================================
+   Crimson Theme - Crimson Pro body, Montserrat nav, teal accents
+   Crafting Interpreters-style margin notes with absolute positioning
+   ========================================================================== */
+
+/* Diagram fonts - Tw Cen MT (local) + Architects Daughter (Google) */
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+@font-face {
+    font-family: "Tw Cen MT";
+    src: url("/fonts/tw-cen-mt/Tw Cen MT.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    /* Colors - base */
+    --color-bg: #FAFAFA;
+    --color-text: #111827;
+    --color-heading: #1F2937;
+    --color-accent: #9C5284;
+    --color-accent-dark: #7A3D66;
+    --color-selection: #E8C8DC;
+
+    /* Colors - neutral */
+    --color-grey: #6B7280;
+    --color-grey-light: #8D8D8D;
+    --color-border: #E5E7EB;
+    --color-sidenote: #4B5563;
+
+    /* Colors - links */
+    --color-link: #4B5563;
+    --color-link-underline: #B0B0B0;
+
+    /* Colors - code & highlights */
+    --color-warm-bg: #FEF9E7;
+    --color-warm-text: #111827;
+    --color-code-bg: #F9F7F6;
+
+    /* Fonts */
+    --font-body: "Crimson Pro", Georgia, serif;
+    --font-nav: "Montserrat", "Helvetica Neue", sans-serif;
+    --font-code: Monaco, Consolas, "Courier New", monospace;
+
+    /* Layout - Crafting Interpreters-inspired column system */
+    --article-width: 700px;
+    --aside-width: 250px;
+    --aside-gap: 48px;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+::selection {
+    background: var(--color-selection);
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Layout - center only the article width; sidenotes overflow right */
+.site-container {
+    max-width: var(--article-width);
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.site-container > main {
+    flex: 1;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    margin-top: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+h3 {
+    font-size: 1.3rem;
+    font-weight: 400;
+    font-style: italic;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+h4 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    margin-bottom: 1.4rem;
+}
+
+p.subtitle {
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--color-grey);
+    margin-top: -0.3rem;
+    margin-bottom: 2rem;
+}
+
+/* Links - grey-blue with dashed underline; teal on hover */
+a {
+    color: var(--color-link);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--color-link-underline);
+    transition: color 0.15s ease, border-color 0.25s ease;
+}
+
+a:hover {
+    color: var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+}
+
+/* Heading links - no underline */
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: inherit;
+    border-bottom: none;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover,
+h4 a:hover, h5 a:hover, h6 a:hover {
+    color: var(--color-accent);
+    border-bottom: none;
+}
+
+/* Horizontal Rule */
+hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 2.5rem 0;
+}
+
+/* ==========================================================================
+   Topbar - Home page only (brand + nav)
+   ========================================================================== */
+
+.topbar {
+    padding: 2.5rem 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+
+.brand-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.brand-name {
+    font-family: var(--font-nav);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: none;
+    letter-spacing: -0.01em;
+}
+
+.brand-name:hover {
+    color: var(--color-accent);
+    border-bottom: none;
+}
+
+.brand-title {
+    font-family: var(--font-nav);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-grey);
+    letter-spacing: 0.02em;
+}
+
+.topbar .nav-links {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+}
+
+.topbar .nav-links a {
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-grey);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: none;
+}
+
+.topbar .nav-links a:hover {
+    color: var(--color-accent);
+}
+
+/* ==========================================================================
+   Page Header - Inner pages (title + hamburger inline)
+   ========================================================================== */
+
+.page-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: 4rem;
+    position: relative;
+}
+
+.page-header .page-title {
+    margin: 0;
+    flex: 1;
+}
+
+/* Hamburger icon */
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    width: 24px;
+    height: 18px;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 0.4rem;
+}
+
+.hamburger span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-grey);
+    transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 8px; }
+.hamburger span:nth-child(3) { top: 16px; }
+
+.hamburger:hover span {
+    background-color: var(--color-accent);
+}
+
+.hamburger.open span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Dropdown nav - positioned in the right margin, mirroring TOC on the left */
+.nav-dropdown {
+    display: none;
+    position: absolute;
+    right: calc(-1 * (var(--aside-width) + var(--aside-gap)));
+    width: var(--aside-width);
+    flex-direction: column;
+    gap: 0.4rem;
+    z-index: 100;
+    /* top set by JS to match hamburger position */
+}
+
+.nav-dropdown.open {
+    display: flex;
+}
+
+.nav-dropdown a {
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-grey);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: none;
+    padding: 0.15rem 0;
+    white-space: nowrap;
+}
+
+.nav-dropdown a:hover,
+.nav-dropdown a.active {
+    color: var(--color-accent);
+}
+
+/* Narrow screens: nav-dropdown falls back to inline dropdown */
+@media (max-width: 1099px) {
+    .nav-dropdown {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        width: auto;
+        margin-top: 0.5rem;
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+}
+
+/* ==========================================================================
+   Blog Post - top bar with back-link + TOC toggle + hamburger
+   ========================================================================== */
+
+.post-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.post-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+/* TOC toggle icon - positioned outside main column on the left */
+.toc-toggle {
+    position: absolute;
+    left: calc(-1 * var(--aside-gap));
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-grey-light);
+    padding: 2px;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.15s ease;
+    z-index: 10;
+    /* top set by JS to match title position */
+}
+
+.toc-toggle:hover,
+.toc-toggle[aria-expanded="true"] {
+    color: var(--color-accent);
+}
+
+/* ==========================================================================
+   TOC Sidebar - left side, mirrors margin notes on right
+   ========================================================================== */
+
+/* TOC sidebar - same width/gap as margin notes, but on the left, fixed on scroll */
+.toc-sidebar {
+    display: none;
+    position: fixed;
+    left: calc(50% - var(--article-width) / 2 - var(--aside-width) - var(--aside-gap));
+    width: var(--aside-width);
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    z-index: 50;
+    /* top is set by JS */
+}
+
+.toc-sidebar.open {
+    display: block;
+}
+
+/* Narrow screens: hidden (no space) */
+@media (max-width: 1099px) {
+    .toc-sidebar,
+    .toc-toggle {
+        display: none !important;
+    }
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    margin-bottom: 0.4rem;
+}
+
+.toc-item a {
+    font-family: var(--font-nav);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-grey);
+    border-bottom: none;
+    display: block;
+    padding: 0.15rem 0 0.15rem 0.6rem;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    line-height: 1.4;
+}
+
+.toc-item a:hover {
+    color: var(--color-text);
+    border-bottom: none;
+}
+
+.toc-h3 a {
+    padding-left: 1.4rem;
+    font-size: 0.7rem;
+    color: var(--color-grey-light);
+}
+
+.toc-active a {
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+    font-weight: 500;
+}
+
+.post-back {
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: none;
+}
+
+.post-back:hover {
+    color: var(--color-accent);
+    border-bottom: none;
+}
+
+/* Blog post title - more top margin, same bottom gap as pages */
+.post-title {
+    margin-top: 3.5rem;
+    margin-bottom: 0;
+    position: relative;
+}
+
+.post-byline {
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    color: var(--color-grey-light);
+    letter-spacing: 0.02em;
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+}
+
+/* ==========================================================================
+   Post Footer - date, tags, sharing, comments at bottom of post
+   ========================================================================== */
+
+.post-footer {
+    margin-top: 3rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 2rem;
+}
+
+.post-meta-bottom {
+    font-family: var(--font-nav);
+    font-size: 0.85rem;
+    color: var(--color-grey-light);
+    letter-spacing: 0.02em;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.post-date {
+    margin-right: 0.3rem;
+}
+
+.post-tag {
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-grey-light);
+    display: inline;
+    margin-right: 0.5rem;
+}
+
+.post-tag::before {
+    content: "#";
+}
+
+/* Author bio — direct traffic trap */
+.author-bio {
+    margin: 1.5rem 0 1.5rem;
+    /* padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border); */
+}
+
+.author-bio p {
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--color-grey-light);
+    margin: 0;
+}
+
+/* Sharing - icon buttons */
+.post-share {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 3rem;
+}
+
+.share-icon {
+    color: var(--color-grey-light);
+    border-bottom: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.share-icon:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+}
+
+.share-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Comments */
+.post-comments {
+    margin-top: 2rem;
+}
+
+.comments-toggle {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--color-grey-light);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-bottom: 1px dashed var(--color-link-underline);
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.comments-toggle:hover {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
+/* ==========================================================================
+   Hero (Home Page) - flowing prose
+   ========================================================================== */
+
+.hero {
+    padding: 4.5rem 0 3rem;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: var(--color-text);
+}
+
+.hero .contact-links {
+    margin-top: 3rem;
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    color: var(--color-grey);
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+}
+
+.hero .contact-links a {
+    color: var(--color-grey);
+    border-bottom: none;
+}
+
+.hero .contact-links a:hover {
+    color: var(--color-accent);
+    border-bottom: none;
+}
+
+.hero .contact-links .separator {
+    margin: 0 0.5rem;
+    color: var(--color-grey-light);
+}
+
+/* ==========================================================================
+   Content
+   ========================================================================== */
+
+.content {
+    padding-bottom: 4rem;
+    position: relative;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 2.4rem;
+    font-weight: 400;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    line-height: 1;
+    color: var(--color-text);
+}
+
+.page-subtitle {
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--color-grey);
+    margin-top: 0.4rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Quote style subtitle — only in blog posts (after post-byline) */
+.post-byline + .page-subtitle {
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-border);
+}
+
+/* Role entries - h4 inside div, collapse gap to next paragraph */
+.role-entry {
+    margin-bottom: 0;
+}
+
+.role-entry h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+.role-entry + p {
+    margin-top: 0.3rem;
+}
+
+.content .role-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    display: block;
+}
+
+.content .role-period {
+    font-style: italic;
+    color: var(--color-grey);
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.content .client-list {
+    font-size: 0.95rem;
+    color: var(--color-grey);
+    font-style: italic;
+    margin-bottom: 1.4rem;
+}
+
+/* Fallback: collapse gap on p containing role-title */
+.content p:has(> .role-title) {
+    margin-bottom: 0.2rem;
+}
+
+/* ==========================================================================
+   Margin Notes - Crafting Interpreters style
+   Not italic, darker grey, wider
+   ========================================================================== */
+
+.marginnote {
+    position: absolute;
+    right: calc(-1 * (var(--aside-width) + var(--aside-gap)));
+    width: var(--aside-width);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-sidenote);
+    font-style: normal;
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.4rem;
+    transition: background-color 0.2s ease;
+}
+
+.marginnote a {
+    border-bottom: none;
+}
+
+/* Linked sidenotes - dotted underline on phrases, yellow highlight on hover */
+[data-note] {
+    border-bottom: 1px dotted var(--color-grey-light);
+    cursor: default;
+    border-radius: 2px;
+    padding: 0 1px;
+    transition: background-color 0.2s ease;
+}
+
+h2 [data-note],
+h4 [data-note] {
+    border-bottom: none;
+}
+
+[data-note].highlight {
+    background-color: var(--color-warm-bg);
+}
+
+.marginnote.highlight {
+    background-color: var(--color-warm-bg);
+}
+
+/* Open Source List */
+.oss-list {
+    list-style: none;
+    padding: 0;
+}
+
+.oss-list li {
+    margin-bottom: 1.2rem;
+    padding-left: 0;
+    line-height: 1.6;
+}
+
+.oss-list li:not(:first-child) {
+    margin-top: 0;
+}
+
+.oss-list .project-name {
+    font-weight: 700;
+}
+
+/* Writing Page */
+.upcoming-post {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-grey);
+    font-size: 1.1rem;
+    font-style: italic;
+}
+
+.upcoming-post:last-child {
+    border-bottom: none;
+}
+
+.upcoming-label {
+    font-family: var(--font-nav);
+    font-size: 0.65rem;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-grey-light);
+    margin-left: 0.8rem;
+}
+
+.writing-post {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.writing-post a {
+    border-bottom: none;
+}
+
+.writing-post a:hover {
+    color: var(--color-accent);
+}
+
+.writing-date {
+    font-family: var(--font-nav);
+    font-size: 0.75rem;
+    color: var(--color-grey-light);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Contact Page */
+.contact-list {
+    list-style: none;
+    padding: 0;
+    font-size: 1.2rem;
+}
+
+.contact-list li {
+    margin-bottom: 1.2rem;
+}
+
+.contact-list .label {
+    font-family: var(--font-nav);
+    color: var(--color-grey);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.15rem;
+}
+
+/* Blockquote */
+blockquote {
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--color-grey);
+    margin: 2rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-border);
+}
+
+/* Figure & Caption */
+figure {
+    margin: 2rem 0;
+    padding: 0;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+figcaption {
+    font-family: var(--font-nav);
+    font-size: 0.75rem;
+    color: var(--color-grey-light);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+}
+
+/* KaTeX - match body text size */
+.katex {
+    font-size: 1em !important;
+}
+
+/* Code */
+code {
+    font-family: var(--font-code);
+    font-size: 0.95rem;
+    color: var(--color-warm-text);
+    padding: 2px 4px;
+    background: var(--color-code-bg);
+    border-radius: 3px;
+}
+
+pre {
+    background: var(--color-code-bg);
+    border-radius: 3px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    line-height: 1.4;
+    border: 1px dashed var(--color-grey);
+}
+
+pre code {
+    font-size: 0.85rem;
+    padding: 0;
+    background: none;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.site-footer {
+    padding: 2rem 0 3rem;
+    border-top: 1px solid var(--color-border);
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.site-footer .copyright {
+    font-family: var(--font-nav);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-grey-light);
+}
+
+.site-footer .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-footer .footer-links a {
+    font-family: var(--font-nav);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-grey-light);
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.site-footer .footer-links a:hover {
+    color: var(--color-accent);
+    border-bottom: none;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 1060px) {
+    .marginnote {
+        position: relative;
+        right: auto;
+        width: auto;
+        display: block;
+        margin: 0.5rem 0 1rem 0;
+        padding-left: 1rem;
+        border-top: none;
+        border-left: 1px solid var(--color-border);
+        padding-top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 1.1rem;
+    }
+
+    .topbar {
+        padding: 1.5rem 0 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .topbar .nav-links {
+        gap: 1.2rem;
+    }
+
+    .topbar .nav-links a {
+        font-size: 0.75rem;
+    }
+
+    .brand-name {
+        font-size: 1.2rem;
+    }
+
+    .page-header {
+        margin-top: 2rem;
+    }
+
+    .post-topbar {
+        margin-top: 2rem;
+    }
+
+    .hero {
+        padding: 2.5rem 0 2rem;
+    }
+
+    .hero p {
+        font-size: 1.15rem;
+        line-height: 1.7;
+    }
+
+    h1, .page-title {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .site-footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .site-footer .footer-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-container {
+        padding: 0 1rem;
+    }
+
+    .topbar .nav-links {
+        gap: 0.8rem;
+    }
+
+    .brand-name {
+        font-size: 1.1rem;
+    }
+}
+
+/* Print */
+@media print {
+    body {
+        color: #000;
+        background: #fff;
+        overflow-x: visible;
+    }
+
+    .topbar,
+    .hamburger,
+    .nav-dropdown,
+    .post-topbar .hamburger,
+    .site-footer {
+        display: none;
+    }
+
+    a {
+        color: #000;
+        border-bottom: none;
+    }
+
+    .content a::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .marginnote {
+        position: relative;
+        right: auto;
+        display: block;
+        width: auto;
+        margin: 0.5rem 0;
+    }
+}
