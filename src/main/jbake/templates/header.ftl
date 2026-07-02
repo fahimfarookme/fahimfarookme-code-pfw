@@ -68,11 +68,13 @@
     "@type": "Organization",
     "@id": "https://asymm.systems/#organization",
     "name": "Asymm Systems",
-    "url": "https://asymm.systems/"
+    "url": "https://asymm.systems/",
+    "sameAs": "https://www.wikidata.org/wiki/Q140406273"
   },
   "sameAs": [
     "https://github.com/fahimfarookme",
-    "https://linkedin.com/in/fahimfarookme"
+    "https://linkedin.com/in/fahimfarookme",
+    "https://www.wikidata.org/wiki/Q140406496"
   ]
 }
 </script>
