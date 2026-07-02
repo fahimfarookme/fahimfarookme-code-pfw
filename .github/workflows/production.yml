@@ -36,4 +36,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: fahimfarookme
           directory: target/site
-          branch: master
+          branch: main
