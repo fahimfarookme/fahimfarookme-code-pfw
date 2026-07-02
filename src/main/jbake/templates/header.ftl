@@ -1,6 +1,13 @@
 <#-- Theme-aware head section -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="/favicon.jpg">
+<link rel="apple-touch-icon" href="/favicon.jpg">
+
+<#-- Canonical (extensionless, matching Cloudflare Pages clean URLs) -->
+<#assign cleanUri = content.uri>
+<#if cleanUri?ends_with("index.html")><#assign cleanUri = cleanUri?substring(0, cleanUri?length - 10)><#elseif cleanUri?ends_with(".html")><#assign cleanUri = cleanUri?substring(0, cleanUri?length - 5)></#if>
+<link rel="canonical" href="${config.site_host}/${cleanUri}">
 
 <#-- Title -->
 <#if content.uri == "index.html">
@@ -32,7 +39,7 @@
 </#if>
 </#if>
 <meta property="og:type" content="website">
-<meta property="og:url" content="${config.site_host}/${content.uri}">
+<meta property="og:url" content="${config.site_host}/${cleanUri}">
 
 <#-- Twitter Card -->
 <meta name="twitter:card" content="summary">
@@ -47,6 +54,28 @@
 <meta name="twitter:description" content="${content.description}">
 </#if>
 </#if>
+
+<#-- Person + employer: fuses this profile with the Asymm Systems entity via the shared @id -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "${config.site_host}/#person",
+  "name": "Fahim Farook",
+  "url": "${config.site_host}/",
+  "jobTitle": "Founder and Principal Architect",
+  "worksFor": {
+    "@type": "Organization",
+    "@id": "https://asymm.systems/#organization",
+    "name": "Asymm Systems",
+    "url": "https://asymm.systems/"
+  },
+  "sameAs": [
+    "https://github.com/fahimfarookme",
+    "https://linkedin.com/in/fahimfarookme"
+  ]
+}
+</script>
 
 <#-- Fonts -->
 <#assign theme = config.site_theme!"tufte">
