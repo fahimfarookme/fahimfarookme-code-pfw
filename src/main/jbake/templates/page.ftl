@@ -33,6 +33,7 @@
                 <a href="/">Home</a>
                 <a href="/profile.html"<#if content.uri == "profile.html"> class="active"</#if>>About</a>
                 <a href="/writing.html"<#if content.uri == "writing.html"> class="active"</#if>>Writing</a>
+                <a href="/consult.html"<#if content.uri == "consult.html"> class="active"</#if>>Consult</a>
                 <a href="/contact.html"<#if content.uri == "contact.html"> class="active"</#if>>Contact</a>
             </nav>
         </div>

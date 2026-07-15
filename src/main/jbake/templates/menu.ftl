@@ -8,6 +8,7 @@
     <nav class="nav-links">
         <a href="/profile.html">About</a>
         <a href="/writing.html">Writing</a>
+        <a href="/consult.html">Consult</a>
         <a href="/contact.html">Contact</a>
     </nav>
 </header>

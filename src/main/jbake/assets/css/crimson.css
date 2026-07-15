@@ -1074,3 +1074,97 @@ pre code {
         margin: 0.5rem 0;
     }
 }
+
+/* ==========================================================================
+   Consult Page - two booking calls side by side (plum accent, flat cards)
+   ========================================================================== */
+
+.consult-duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0 2.5rem;
+}
+
+.consult-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-top: 2px solid var(--color-accent);
+    padding: 1.4rem 1.3rem;
+}
+
+.consult-name {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--color-heading);
+}
+
+.consult-terms {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0.35rem 0 0.7rem;
+}
+
+.consult-price {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-text);
+    line-height: 1.2;
+}
+
+.consult-dur {
+    font-family: var(--font-nav);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-grey-light);
+}
+
+.consult-desc {
+    flex: 1;
+    color: var(--color-grey);
+    font-size: 1rem;
+    line-height: 1.55;
+    margin: 0 0 1rem;
+}
+
+.consult-book {
+    align-self: flex-start;
+    font-family: var(--font-nav);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    border-bottom: 1px solid transparent;
+}
+
+.consult-book:hover {
+    color: var(--color-accent-dark);
+    border-bottom: 1px solid var(--color-accent);
+}
+
+.consult-lead {
+    font-style: italic;
+    color: var(--color-grey);
+    margin-top: 0.3rem;
+}
+
+.consult-fineprint {
+    font-family: var(--font-nav);
+    font-size: 0.8rem;
+    color: var(--color-grey-light);
+    margin-top: 1.8rem;
+}
+
+@media (max-width: 560px) {
+    .consult-duo {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
