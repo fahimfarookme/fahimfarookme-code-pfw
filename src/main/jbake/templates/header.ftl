@@ -82,7 +82,7 @@
 <#-- Fonts -->
 <#assign theme = config.site_theme!"tufte">
 <#if theme == "tufte">
-<link rel="stylesheet" href="/css/fonts.css">
+<link rel="stylesheet" href="/css/fonts.css?v=${.now?string('yyyyMMddHHmmss')}">
 <#else>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,5 +97,5 @@
 <#-- RSS -->
 <link rel="alternate" type="application/rss+xml" title="${config.site_title}" href="/feed.xml">
 
-<#-- Theme CSS -->
-<link rel="stylesheet" href="/css/${theme}.css">
+<#-- Theme CSS (versioned to bust the immutable /css/* cache on each build) -->
+<link rel="stylesheet" href="/css/${theme}.css?v=${.now?string('yyyyMMddHHmmss')}">
