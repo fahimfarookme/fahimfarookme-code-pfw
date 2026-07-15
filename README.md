@@ -10,13 +10,19 @@ Tested with:
 
 ## Build
 
-Generate the static site:
+Generate the static site (with CSS minification, HTML compression, and clean URLs):
+
+```bash
+./mvnw clean process-resources
+```
+
+Output is written to `target/site/`.
+
+For a quick unoptimised build (JBake only):
 
 ```bash
 ./mvnw jbake:generate
 ```
-
-Output is written to `target/site/`.
 
 ## Serve Locally
 

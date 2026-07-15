@@ -17,6 +17,9 @@
         <jbake.version>2.6.7</jbake.version>
         <jbake.plugin.version>0.3.4</jbake.plugin.version>
         <freemarker.version>2.3.33</freemarker.version>
+        <minify.plugin.version>1.7.11</minify.plugin.version>
+        <htmlcompressor.plugin.version>2.1.1</htmlcompressor.plugin.version>
+        <skip.optimize>false</skip.optimize>
     </properties>
 
     <build>
@@ -55,6 +58,115 @@
                         <version>0.64.8</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+
+            <!-- CSS Minification -->
+            <plugin>
+                <groupId>com.7p-group</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>${minify.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>minify-crimson</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>minify</goal></goals>
+                        <configuration>
+                            <webappSourceDir>${project.basedir}/src/main/jbake/assets</webappSourceDir>
+                            <webappTargetDir>${project.build.directory}/site</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>crimson.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>crimson.css</cssFinalFile>
+                            <skipMerge>true</skipMerge>
+                            <nosuffix>true</nosuffix>
+                            <charset>UTF-8</charset>
+                            <skipMinify>${skip.optimize}</skipMinify>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minify-tufte</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>minify</goal></goals>
+                        <configuration>
+                            <webappSourceDir>${project.basedir}/src/main/jbake/assets</webappSourceDir>
+                            <webappTargetDir>${project.build.directory}/site</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>tufte.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>tufte.css</cssFinalFile>
+                            <skipMerge>true</skipMerge>
+                            <nosuffix>true</nosuffix>
+                            <charset>UTF-8</charset>
+                            <skipMinify>${skip.optimize}</skipMinify>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minify-fonts</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>minify</goal></goals>
+                        <configuration>
+                            <webappSourceDir>${project.basedir}/src/main/jbake/assets</webappSourceDir>
+                            <webappTargetDir>${project.build.directory}/site</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>fonts.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>fonts.css</cssFinalFile>
+                            <skipMerge>true</skipMerge>
+                            <nosuffix>true</nosuffix>
+                            <charset>UTF-8</charset>
+                            <skipMinify>${skip.optimize}</skipMinify>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- HTML Compression -->
+            <plugin>
+                <groupId>com.github.hazendaz.maven</groupId>
+                <artifactId>htmlcompressor-maven-plugin</artifactId>
+                <version>${htmlcompressor.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compress-html</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>html</goal></goals>
+                        <configuration>
+                            <srcFolder>${project.build.directory}/site</srcFolder>
+                            <targetFolder>${project.build.directory}/site</targetFolder>
+                            <javascriptHtmlSprite>false</javascriptHtmlSprite>
+                            <removeComments>true</removeComments>
+                            <removeMultiSpaces>true</removeMultiSpaces>
+                            <removeIntertagSpaces>false</removeIntertagSpaces>
+                            <preserveLineBreaks>false</preserveLineBreaks>
+                            <compressJavaScript>false</compressJavaScript>
+                            <compressCss>false</compressCss>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Clean URLs: strip .html from href links for Cloudflare Pages -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>clean-urls</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>exec</goal></goals>
+                        <configuration>
+                            <executable>${project.basedir}/scripts/clean-urls.sh</executable>
+                            <arguments>
+                                <argument>${project.build.directory}/site</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

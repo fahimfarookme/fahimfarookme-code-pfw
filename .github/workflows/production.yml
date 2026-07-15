@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Build site
-        run: ./mvnw jbake:generate --batch-mode --no-transfer-progress
+        run: ./mvnw clean process-resources --batch-mode --no-transfer-progress
 
       - name: Deploy to Cloudflare Pages (production)
         uses: cloudflare/pages-action@v1
