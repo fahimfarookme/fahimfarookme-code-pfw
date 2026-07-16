@@ -81,7 +81,8 @@
                             <skipMerge>true</skipMerge>
                             <nosuffix>true</nosuffix>
                             <charset>UTF-8</charset>
-                            <skipMinify>${skip.optimize}</skipMinify>
+                            <!-- CSS minifier (YUI) strips required whitespace inside calc(); keep CSS unminified -->
+                            <skipMinify>true</skipMinify>
                         </configuration>
                     </execution>
                     <execution>
@@ -99,7 +100,8 @@
                             <skipMerge>true</skipMerge>
                             <nosuffix>true</nosuffix>
                             <charset>UTF-8</charset>
-                            <skipMinify>${skip.optimize}</skipMinify>
+                            <!-- CSS minifier (YUI) strips required whitespace inside calc(); keep CSS unminified -->
+                            <skipMinify>true</skipMinify>
                         </configuration>
                     </execution>
                     <execution>
@@ -117,7 +119,8 @@
                             <skipMerge>true</skipMerge>
                             <nosuffix>true</nosuffix>
                             <charset>UTF-8</charset>
-                            <skipMinify>${skip.optimize}</skipMinify>
+                            <!-- CSS minifier (YUI) strips required whitespace inside calc(); keep CSS unminified -->
+                            <skipMinify>true</skipMinify>
                         </configuration>
                     </execution>
                 </executions>
