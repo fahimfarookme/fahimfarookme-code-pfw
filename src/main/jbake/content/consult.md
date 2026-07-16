@@ -10,7 +10,7 @@ status=published
     - /free          -> 15-min intro
     - /consultation  -> 60-min paid session
   Remaining setup inside Cal.com before it fully works:
-    - "consultation": set price to $150 and connect a payment app that pays out
+    - "consultation": set price to $100 and connect a payment app that pays out
       via PayPal (Cal.com supports PayPal; Stripe does not support Sri Lanka).
     - "free": add required booking questions - Name, Company, and
       "What would you like to discuss?".
@@ -31,7 +31,7 @@ Each week I keep a few slots open for paid 1:1 work. I've architected large-scal
 
   <div class="consult-card">
     <span class="consult-name">Consultation</span>
-    <div class="consult-terms"><span class="consult-price">$150</span><span class="consult-dur">60 min</span></div>
+    <div class="consult-terms"><span class="consult-price">$100</span><span class="consult-dur">60 min</span></div>
     <p class="consult-desc">A focused hour on whatever you're working through - an architecture review, a design decision, or technical advice. You leave with clear, prioritized recommendations and a short written summary afterwards.</p>
     <a class="consult-book" href="https://cal.com/fahimfarookme/consultation">Book &amp; pay via PayPal &rarr;</a>
   </div>
