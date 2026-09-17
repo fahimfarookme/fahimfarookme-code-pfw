@@ -34,7 +34,16 @@
         <#if (content.subtitle)??>
         <p class="page-subtitle">${content.subtitle}</p>
         </#if>
-        ${content.body}
+        <#-- references=hide drops the References section (and the rule above it) from the page -->
+        <#assign postBody = content.body>
+        <#if (content.references!"show") == "hide">
+            <#assign refAt = postBody?index_of('id="references"')>
+            <#if (refAt >= 0)>
+                <#assign postBody = postBody[0..<refAt]>
+                <#assign postBody = postBody[0..<postBody?last_index_of('<h2')]?trim?remove_ending('<hr/>')?remove_ending('<hr />')?remove_ending('<hr>')>
+            </#if>
+        </#if>
+        ${postBody}
 
         <#-- Post footer: date, tags, sharing, comments -->
         <footer class="post-footer">
@@ -87,6 +96,26 @@
         note.addEventListener('mouseenter', function() { el.classList.add('highlight'); note.classList.add('highlight'); });
         note.addEventListener('mouseleave', function() { el.classList.remove('highlight'); note.classList.remove('highlight'); });
     });
+
+    /* Margin notes: push a note down when it would overlap the one above it.
+       Only applies while notes sit in the margin (position: absolute). */
+    function layoutMarginNotes() {
+        var gap = 16;
+        var prevBottom = -Infinity;
+        document.querySelectorAll('.content .marginnote').forEach(function(note) {
+            note.style.marginTop = '';
+            if (getComputedStyle(note).position !== 'absolute') return;
+            var top = note.getBoundingClientRect().top + window.scrollY;
+            if (top < prevBottom + gap) {
+                note.style.marginTop = (prevBottom + gap - top) + 'px';
+            }
+            prevBottom = note.getBoundingClientRect().bottom + window.scrollY;
+        });
+    }
+    layoutMarginNotes();
+    window.addEventListener('load', layoutMarginNotes);
+    window.addEventListener('resize', layoutMarginNotes);
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(layoutMarginNotes); }
 
     /* Build TOC from h2/h3 headings */
     var tocList = document.getElementById('tocList');

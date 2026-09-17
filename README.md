@@ -59,9 +59,12 @@ date=2026-04-01
 type=post
 tags=distributed-systems, architecture
 status=published|draft
+references=show|hide
 ~~~~~~
 Post content goes here in Markdown. I plan to add org-mode support when I find some time, insha Allah.
 ```
+
+`references` controls whether a `## References` section is published. Write the section either way; `hide` removes it, and the horizontal rule above it, from the rendered page. Leave the field out and references are shown.
 
 2. Rebuild: `./mvnw jbake:generate`
 
