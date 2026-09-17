@@ -65,6 +65,25 @@
             note.addEventListener('mouseenter', function() { el.classList.add('highlight'); note.classList.add('highlight'); });
             note.addEventListener('mouseleave', function() { el.classList.remove('highlight'); note.classList.remove('highlight'); });
         });
+        /* Margin notes: push a note down when it would overlap the one above it.
+           Only applies while notes sit in the margin (position: absolute). */
+        function layoutMarginNotes() {
+            var gap = 16;
+            var prevBottom = -Infinity;
+            document.querySelectorAll('.content .marginnote').forEach(function(note) {
+                note.style.marginTop = '';
+                if (getComputedStyle(note).position !== 'absolute') return;
+                var top = note.getBoundingClientRect().top + window.scrollY;
+                if (top < prevBottom + gap) {
+                    note.style.marginTop = (prevBottom + gap - top) + 'px';
+                }
+                prevBottom = note.getBoundingClientRect().bottom + window.scrollY;
+            });
+        }
+        layoutMarginNotes();
+        window.addEventListener('load', layoutMarginNotes);
+        window.addEventListener('resize', layoutMarginNotes);
+        if (document.fonts && document.fonts.ready) { document.fonts.ready.then(layoutMarginNotes); }
     })();
     </script>
     </#if>
