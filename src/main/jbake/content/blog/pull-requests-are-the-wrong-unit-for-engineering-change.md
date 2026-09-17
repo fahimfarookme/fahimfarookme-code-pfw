@@ -7,23 +7,32 @@ subtitle=On preparatory refactoring, and the decision your tooling makes for you
 description=Preparatory refactoring is four decisions, not one - whether it pays off, how tightly it is bound to the fix, what order to work in, and what you hand a reviewer.
 ~~~~~~
 
-<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br><br>Yegor Bugayenko, *Angry Tests* (2024)</span>Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this LinkedIn](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) post recently, where <span data-note="note-yegor">Yegor Bugayenko</span> introduces the idea of putting preparatory refactoring into its own pull request, or a series of pull requests.
+<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br><br>Yegor Bugayenko, *Angry Tests* (2024)</span>
 
-All of this advice sounds reasonable at first. But there are four decisions mixed together here.
+<span class="marginnote" id="note-change">Note that I use <i>change</i> to refer to the original intended change, either a bug fix or a feature.</span>
 
-1. **Will the restructuring pay for itself?**
-2. **How tightly is it bound to the fix?** Not at all, only by meaning, or not separable.
-3. **When do you do it?** Before the fix, after it, or in the same change.
-4. **How is the work packaged?** One pull request, several, or commits inside one.
+<span class="marginnote" id="note-refactoring">Note that I use <i>refactoring</i> to refer to the preparatory work, whether behaviour-preserving or not.</span>
 
-Here is who answers what.
+<span class="marginnote" id="who-answers-what">I have not read everything they have written, so this is based on what I have seen. Let me know if I have got it wrong.</span>
+
+
+Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) <span data-note="note-yegor">LinkedIn post</span> recently, where Yegor Bugayenko introduces the idea of putting preparatory refactoring into its own pull request, or a series of pull requests.
+
+All of this advice sounds reasonable at first. But there are several questions around the <span data-note="note-refactoring"><i>refactoring</i></span> and the <span data-note="note-change"><i>change</i></span>, and the advice above addresses only some of them.
+
+1. How far is the refactoring worth doing?
+2. How tightly is the refactoring coupled to the change?
+3. When should the refactoring be done?
+4. How should the refactoring be packaged?
+
+<span data-note="who-answers-what">Here is who answers what.</span>
 
 | Question | Who answers it | What they say | What's missing |
 |---|---|---|---|
-| Will it pay for itself? | Fowler | Don't refactor unless you expect to recoup it in quicker work later | The recoup is allowed to be the fix itself, so for preparatory refactoring the test passes by construction. It can't tell sound preparation from speculative design with a pretext. |
-| How tightly is it bound? | Nobody | | Never asked. Preparatory refactoring covers the loosely bound case and the inseparable case under one name. |
+| Worth? | Fowler | Refactor if the time spent can be recovered through a quicker change later. For preparatory work he is explicit about the comparison: restructure-then-change is often faster in total than the change without it | Two items in his sum: time to write the change, time to read the code later. He does say clean code delivers faster, which covers review, but only as an outcome with no parts in it. Nothing tells you what a review costs, or a release, or what changes when you cut one change into four. |
+| Coupled? | Nobody | | Never asked. Preparatory refactoring covers the loosely bound case and the inseparable case under one name. |
 | When? | Beck, Fowler | Before | Fowler draws a fix-first branch for his other refactoring workflows and none for this one. Neither of them treats the case where the restructuring *is* the fix. |
-| How is it packaged? | The pull request advice | Separate pull requests, fix always last | Treated as though it followed from the answer to "when". It doesn't. |
+| Packaging? | The pull request advice | Separate pull requests, fix always last | Treated as though it followed from the answer to "when". It doesn't. |
 
 The second and fourth rows are the whole post. Nobody asks how tightly the work is bound, and everybody assumes that deciding when to do it also decides how to hand it over.
 
@@ -33,15 +42,31 @@ One more thing about the four before we start. Only the second one is purely abo
 
 ## Will it pay for itself?
 
-<span class="marginnote" id="note-econ">Fowler files this under "Is refactoring wasteful rework?" in *Workflows of Refactoring*, next to two instructions people quote far less often: balance refactoring with feature delivery, and don't try to fix things completely.</span>Fowler's answer is the right one. Don't refactor unless you expect to <span data-note="note-econ">recoup the investment</span> in quicker work later. The strongest version is reuse; the seam you add now helps the next change too, so you aren't paying for one change, you're paying for several.
+<span class="marginnote" id="note-econ">Fowler files this under "Is refactoring wasteful rework?" in *Workflows of Refactoring*, next to two instructions people quote far less often: balance refactoring with feature delivery, and don't try to fix things completely.</span>Fowler's answer is the right one. Don't restructure unless you expect to <span data-note="note-econ">get that time back</span> later, through work that goes quicker because you did. The strongest version is reuse; the seam you add now helps the next change too, so you aren't paying for one change, you're paying for several.
 
-The problem is that the test cannot fail here, and it's worth being precise about why. Fowler lets the recoup come from the change you're about to make. Preparatory refactoring is, by definition, refactoring you're doing because you think it makes that change easier. So the test asks whether you believe the thing you already believe. Every preparatory refactoring passes.
+And the rule works. Run it on the VAT bug honestly. The one-line conditional is ten minutes. The `TaxRule` seam plus the fix is two hours. You are not getting an hour and fifty minutes back, so the rule tells you not to bother, and the rule is right.
 
-The repair is to take the fix out of the sum.
+What it cannot tell you is anything about the rest of this post, and it's worth being exact about where the edge sits.
+
+Fowler is not only counting your afternoon. In the same deck he writes that refactoring "makes it easier to understand the code - which makes subsequent changes quicker and cheaper", and his comprehension refactoring workflow exists so that "nobody has to build it from scratch in their head again". Other people's time is in the sum.
+
+But every one of those people is reading code that already landed. They open the file, they follow it, they make their change. A reviewer is doing a different job: reading code that has *not* landed, and deciding whether it should. What they are handed is an interface with one implementation and no second implementation anywhere, and the question in front of them is not "can I follow this" but "should this go in".
+
+Fowler never writes about that decision. His deck ends on "Refactoring → Clean Code → Faster Delivery", and delivery in his vocabulary is the whole path to production, so the reviewer is in there somewhere. But it is an outcome with no parts. Review never appears as an activity with a cost of its own, his flow charts run from *add the feature* straight to *done*, and a release is never a thing you pay for each time you do one. There is no resolution at which you could ask what happens to review when one change becomes four.
+
+Notice also which way that claim points. Clean code delivers faster is an argument for doing the restructuring. It says nothing about how to hand it over. You cannot get "put the restructuring in its own pull request" out of it.
+
+And here is the part worth being fair about. In his workflow that costs him nothing. He restructures and makes the change in one sitting, so one change reaches the reviewer, and that reviewer's job is no harder for the preparation having happened. His sum is complete for the way he works.
+
+It only springs a leak when somebody uses that rule to justify splitting the work across pull requests. Now there are four approvals instead of one, and somebody is holding a piece with no successor in place. Neither of those exists in his world. So this is not a mistake of his; it's what breaks when his rule is carried into a decision he wasn't writing about.
+
+One more thing about the shape of it. His returns are partly deferred, arriving whenever somebody next opens the file. The costs of splitting all land up front.
+
+There is also a second question the rule doesn't ask, and it turns out to matter more than the first.
 
 > **Would you do this restructuring if the bug didn't exist?**
 
-Now it discriminates. Yes means the work has its own case and the bug is just when you happened to notice. No means the only payoff is this fix, and the real question is whether the fix actually needs it, which is the next section.
+Yes means the work has its own case and the bug is just when you happened to notice. No means the only payoff is this fix, and the real question is whether the fix actually needs it, which is the next section.
 
 There's one answer that looks like a yes and isn't, and it's the interesting one. "Yes, because three more tax jurisdictions land next quarter." That may well be true. But it's true in your head and nowhere in the diff, and the reviewer cannot see next quarter. The restructuring isn't the problem in that case. The problem is that the thing justifying it lives somewhere the reviewer can't reach, and most of the rest of this post is about that.
 
@@ -186,7 +211,7 @@ An interface with one implementation. A lookup that takes a destination and igno
 
 There's no code-health story to tell. The only honest answer to *why is this better* is *because of a change you cannot see*.
 
-Same category; splitting an interface so a later change can substitute one half, threading a parameter through call sites where every caller passes the same value it used to read from ambient state, or adding a seam whose only consumer is the pending change. In each of these the structure became more general in a direction that only the unwritten change uses. Generality with no consumer looks like speculative design, and until the fix lands, that's precisely what it is.
+Same category; splitting an interface so a later change can substitute one half, threading a parameter through call sites where every caller passes the same value it used to read from ambient state, or adding a seam whose only consumer is the pending change. In each of these the structure became more general in a direction that only the unwritten change uses. A general mechanism with nothing using it looks like a guess about the future, and until the fix lands that is exactly what it is.
 
 And now the uncomfortable part. Look at what fixing that bug actually takes on its own.
 

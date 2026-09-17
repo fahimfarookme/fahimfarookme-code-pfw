@@ -851,6 +851,77 @@ blockquote {
     border-left: 2px solid var(--color-border);
 }
 
+/* ==========================================================================
+   Tables - framed with hairline rules, prose cells top-aligned
+   ========================================================================== */
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.content table th {
+    font-family: var(--font-nav);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-grey);
+    text-align: left;
+    vertical-align: bottom;
+    padding: 0 0.9rem 0.5rem 0;
+    border-bottom: 1px solid var(--color-grey-light);
+}
+
+.content table td {
+    vertical-align: top;
+    padding: 0.7rem 0.9rem 0.7rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.content table th:not(:last-child),
+.content table td:not(:last-child) {
+    border-right: 1px solid var(--color-border);
+}
+
+.content table th:not(:first-child),
+.content table td:not(:first-child) {
+    padding-left: 0.9rem;
+}
+
+.content table tr:last-child td {
+    border-bottom: 1px solid var(--color-grey-light);
+}
+
+.content table td code {
+    font-size: 0.85em;
+}
+
+@media (max-width: 768px) {
+    .content table {
+        display: block;
+        overflow-x: auto;
+        font-size: 0.9rem;
+    }
+}
+
+@media print {
+    .content table th,
+    .content table tr:last-child td {
+        border-bottom-color: #000;
+    }
+
+    .content table td,
+    .content table th:not(:last-child),
+    .content table td:not(:last-child) {
+        border-color: #999;
+    }
+}
+
+
 /* Figure & Caption */
 figure {
     margin: 2rem 0;
