@@ -3,29 +3,21 @@ date=2026-09-07
 type=post
 tags=empirical-software-engineering, engineering-excellence
 status=published
+references=show
 subtitle=On preparatory refactoring, and the decision your tooling makes for you
 description=Preparatory refactoring is four decisions, not one - whether it pays off, how tightly it is bound to the fix, what order to work in, and what you hand a reviewer.
 ~~~~~~
 
-<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br><br>Yegor Bugayenko, *Angry Tests* (2024)</span>
+<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br><br>Yegor Bugayenko, *Angry Tests* (2024)</span>Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) <span data-note="note-yegor">LinkedIn post</span> recently, where Yegor Bugayenko introduces the idea of putting preparatory refactoring into its own pull request, or a series of pull requests.
 
-<span class="marginnote" id="note-change">Note that I use <i>change</i> to refer to the original intended change, either a bug fix or a feature.</span>
-
-<span class="marginnote" id="note-refactoring">Note that I use <i>refactoring</i> to refer to the preparatory work, whether behaviour-preserving or not.</span>
-
-<span class="marginnote" id="who-answers-what">I have not read everything they have written, so this is based on what I have seen. Let me know if I have got it wrong.</span>
-
-
-Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) <span data-note="note-yegor">LinkedIn post</span> recently, where Yegor Bugayenko introduces the idea of putting preparatory refactoring into its own pull request, or a series of pull requests.
-
-All of this advice sounds reasonable at first. But there are several questions around the <span data-note="note-refactoring"><i>refactoring</i></span> and the <span data-note="note-change"><i>change</i></span>, and the advice above addresses only some of them.
+<span class="marginnote" id="note-refactoring">Note that I use <i>refactoring</i> to refer to the preparatory work, whether behaviour-preserving or not.</span><span class="marginnote" id="note-change">Note that I use <i>change</i> to refer to the original intended change, either a bug fix or a feature.</span>All of this advice sounds reasonable at first. But there are several questions around the <span data-note="note-refactoring"><i>refactoring</i></span> and the <span data-note="note-change"><i>change</i></span>, and the advice above addresses only some of them.
 
 1. How far is the refactoring worth doing?
 2. How tightly is the refactoring coupled to the change?
 3. When should the refactoring be done?
 4. How should the refactoring be packaged?
 
-<span data-note="who-answers-what">Here is who answers what.</span>
+<span class="marginnote" id="who-answers-what">I have not read everything they have written, so this is based on what I have seen. Let me know if I have got it wrong.</span><span data-note="who-answers-what">Here is who answers what.</span>
 
 | Question | Who answers it | What they say | What's missing |
 |---|---|---|---|
