@@ -8,9 +8,12 @@ subtitle=On preparatory refactoring, and the decision your tooling makes for you
 description=Preparatory refactoring is four decisions, not one - whether it pays off, how tightly it is bound to the fix, what order to work in, and what you hand a reviewer.
 ~~~~~~
 
-<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br><br>Yegor Bugayenko, *Angry Tests* (2024)</span>Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) <span data-note="note-yegor">LinkedIn post</span> recently, where Yegor Bugayenko introduces the idea of putting preparatory refactoring into its own pull request, or a series of pull requests.
+<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br><br>Yegor Bugayenko, *Angry Tests* (2024)</span>
 
-<span class="marginnote" id="note-refactoring">Note that I use <i>refactoring</i> to refer to the preparatory work, whether behaviour-preserving or not.</span><span class="marginnote" id="note-change">Note that I use <i>change</i> to refer to the original intended change, either a bug fix or a feature.</span>All of this advice sounds reasonable at first. But there are several questions around the <span data-note="note-refactoring"><i>refactoring</i></span> and the <span data-note="note-change"><i>change</i></span>, and the advice above addresses only some of them.
+Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) <span data-note="note-yegor">LinkedIn post</span> recently, where Yegor Bugayenko introduces the idea of putting preparatory refactoring into its own pull request, or a series of pull requests.
+
+<span class="marginnote" id="note-refactoring">Note that I use <i>refactoring</i> to refer to the preparatory work, whether behaviour-preserving or not.</span><span class="marginnote" id="note-change">Note that I use <i>change</i> to refer to the original intended change, either a bug fix or a feature.</span>
+It raised several questions in my mind about the <span data-note="note-refactoring"><i>refactoring</i></span> and the <span data-note="note-change"><i>change</i></span>, and about whether this advice is complete.
 
 1. How far is the refactoring worth doing?
 2. How tightly is the refactoring coupled to the change?
@@ -19,14 +22,15 @@ description=Preparatory refactoring is four decisions, not one - whether it pays
 
 <span class="marginnote" id="who-answers-what">I have not read everything they have written, so this is based on what I have seen. Let me know if I have got it wrong.</span><span data-note="who-answers-what">Here is who answers what.</span>
 
+<span class="marginnote" id="beck-imply-business">Beck asks: <i>Is there enough time to do your work?</i> in deciding <i>later</i>. I'm not sure if he meant the business urgency here.</span>
+<span class="marginnote" id="first-after-later">Later: when no immediate payoff and can be done incrementally.<br/>After: otherwise makes the change incomplete or makes the next change more expensiv.</br>First: when the payoff is immediate</span>
+
 | Question | Who answers it | What they say | What's missing |
 |---|---|---|---|
-| Worth? | Fowler | Refactor if the time spent can be recovered through a quicker change later. For preparatory work he is explicit about the comparison: restructure-then-change is often faster in total than the change without it | Two items in his sum: time to write the change, time to read the code later. He does say clean code delivers faster, which covers review, but only as an outcome with no parts in it. Nothing tells you what a review costs, or a release, or what changes when you cut one change into four. |
-| Coupled? | Nobody | | Never asked. Preparatory refactoring covers the loosely bound case and the inseparable case under one name. |
-| When? | Beck, Fowler | Before | Fowler draws a fix-first branch for his other refactoring workflows and none for this one. Neither of them treats the case where the restructuring *is* the fix. |
-| Packaging? | The pull request advice | Separate pull requests, fix always last | Treated as though it followed from the answer to "when". It doesn't. |
-
-The second and fourth rows are the whole post. Nobody asks how tightly the work is bound, and everybody assumes that deciding when to do it also decides how to hand it over.
+| Worth? | Fowler, Beck | Fowler: only if the time you spend refactoring comes back later as quicker change.</br>Beck: never refactor, if the code won't change again or there's nothing to learn from tidying it. | Fowler's measure is time saved, and specifically coding time. Beck aditionally count's code author's learning. Code review and the rest of delivery are not counted by either. |
+| Coupled? | Nobody | | Does the refactoring make sense even if the change never happens? |
+| When? | Fowler, Beck, Yegor | Fowler, Yegor: Refactor before the change<br/>Beck: <span data-note="first-after-later">First, after, or later</span>  | Both decide from the perspective of the code author. <span data-note="beck-imply-business">Neither weighs how urgent the change is for the business</span> |
+| Packaging? | Beck, Yegor | Beck: sstructure (refactoring) and behaviour (change) in separate pull requests<br/>Yegor:  a series of refactoring pull requests, then the change in the last one  | Assumes the refactoring pull request can be reasoned without seeing the change. The author knows why, the reviewer doesn't. |
 
 Those first two questions are easy to run together, so it's worth being clear about the difference. "Will it pay for itself" counts the fix as payoff, which is why Fowler's answer is usually yes. "How tightly is it bound" asks whether anybody other than you could tell why you did it. A seam can pay for itself handsomely and still be unreadable to the next person, and that combination is where all the trouble is.
 
@@ -36,7 +40,7 @@ One more thing about the four before we start. Only the second one is purely abo
 
 <span class="marginnote" id="note-econ">Fowler files this under "Is refactoring wasteful rework?" in *Workflows of Refactoring*, next to two instructions people quote far less often: balance refactoring with feature delivery, and don't try to fix things completely.</span>Fowler's answer is the right one. Don't restructure unless you expect to <span data-note="note-econ">get that time back</span> later, through work that goes quicker because you did. The strongest version is reuse; the seam you add now helps the next change too, so you aren't paying for one change, you're paying for several.
 
-And the rule works. Run it on the VAT bug honestly. The one-line conditional is ten minutes. The `TaxRule` seam plus the fix is two hours. You are not getting an hour and fifty minutes back, so the rule tells you not to bother, and the rule is right.
+And the rule works. For preparatory refactoring he makes the comparison explicit: refactoring first and then making the change is often faster overall than making the change without the refactoring. Run that on the VAT bug honestly. The one-line conditional is ten minutes. The `TaxRule` seam plus the fix is two hours. You are not getting an hour and fifty minutes back, so the rule tells you not to bother, and the rule is right.
 
 What it cannot tell you is anything about the rest of this post, and it's worth being exact about where the edge sits.
 
@@ -265,14 +269,15 @@ Standalone value is really a spectrum, not two boxes. It behaves like two boxes 
 
 The next two questions both turn on the same thing, so it's worth doing once. What do you get, and what do you pay, for letting the restructuring and the fix land separately rather than as one change?
 
-Here's the strongest case for keeping them apart that I can build. None of it is Beck's or Fowler's argument, since neither wrote about how any of this gets handed over. It's the argument their readers make.
+Here's the strongest case for keeping them apart. Much of it is Beck's own. In *Tidy First?* he says structural changes and behaviour changes belong in separate pull requests, with as few tidyings in each as possible.
 
 - **Smaller diffs get better review.** A reviewer holding three hundred lines is doing a different job from one holding three thousand. There is evidence for this, and it is the argument everybody leads with.
 - **Separating structure from behaviour makes the behavioural change auditable.** Mix them and nobody can tell which lines were supposed to change behaviour and which were not. Separate them and the claim attached to each piece is clear; this one says nothing changed, that one says exactly this changed.
 - **Behaviour-preserving work is safe, so land it early and shrink the risky part.** By the time the fix arrives it is small, and the small thing is the only thing carrying risk. Anyone else waiting on the new structure can start straight away instead of waiting for your bug.
 - **Small steps are reversible.** If step three turns out wrong, revert step three.
-- **Small steps are faster and less stressful to work in.** This is Beck's actual claim, and Fowler's conclusion in his worked example. Working in small verified increments beats one long risky push.
+- **Small steps are faster and less stressful to work in.** Beck argues for tiny steps, and Fowler's worked example ends on this point. Working in small verified increments beats one long risky push.
 - **It leaves a record.** Six months later the history says why the structure changed, instead of burying it inside a fix.
+- **Small batches clash less.** The longer work waits to merge, the more likely it collides with someone else's, and the more likely a batch quietly changes behaviour. That is Beck's batch-size argument.
 
 That is a good argument. Most of it is even true. Here is why almost none of it reaches the conclusion people draw from it.
 
@@ -280,12 +285,15 @@ That is a good argument. Most of it is even true. Here is why almost none of it 
 <span class="marginnote" id="note-hats">The metaphor is Beck's. Fowler says he "passed on Kent's metaphor" in the *Refactoring* book. Two modes, and you can only wear one at a time: refactoring keeps the tests green by construction, adding function breaks them on purpose.</span>- **Separating structure from behaviour is right, and it is an argument about commits.** The <span data-note="note-hats">two hats</span> describe what you are doing at a given moment. Fowler is explicit about the granularity: "during programming you may swap frequently between hats, perhaps every couple of minutes." Every couple of minutes is not a pull request. It is not even a commit. Nothing in "wear one hat at a time" reaches packaging at all.
 - **"Behaviour-preserving" is a claim, not a fact.** Split off from the fix, it merges with nothing new checking it. And the code you most want to restructure has the thinnest coverage you own, which is usually why it got that way.
 - **Reverting step three of six is not an ordinary operation.** Steps four, five and six sit on top of it. And in Case B, keeping step three after reverting the fix buys you nothing, because it was worth nothing alone.
-- **Small steps being nicer to work in is about authoring, not packaging.** You can take twenty small verified steps and put them in one pull request. Beck's claim survives completely and reaches nothing about forges.
+- **Small steps being nicer to work in is about authoring, not packaging.** You can take twenty small verified steps and put them in one pull request. This point survives completely and says nothing about pull requests.
 - **A record is made by commits.** Separate pull requests add nothing to the history that ordered commits do not already give you.
+- **Merging early also spreads the half-finished shape.** A seam that lands early is a seam other people start building on before anyone knows whether the change it was for will arrive.
 
 Notice the shape of that. Nearly every argument on the list is an argument for small, ordered, separately-readable steps. Hold on to that, because it turns out to matter enormously which of those words you take seriously.
 
 Fowler, incidentally, argues the other way on delivery. His own economic advice is that "refactoring should be done in conjunction with adding new features", and that preparatory refactoring "can pay for itself when adding the feature you're preparing for". In conjunction with. Pays for itself when the feature arrives. Both of those are arguments for keeping them together, from the person who named the practice.
+
+Beck's separate-pull-request advice rests on one assumption: that each tidying can be judged on its own. For most of his tidyings that holds. A guard clause or a deleted dead branch explains itself. But one of his own, *New Interface, Old Implementation*, can take exactly the Case B shape: write the interface you wish you could call, make it delegate to the old one, and call it from the change you're about to make. Ship that tidying first, in its own pull request, and the reviewer sees a pass-through that nothing uses yet.
 
 ## What survives, and what it costs
 
@@ -297,7 +305,7 @@ It costs two things.
 
 - The bug is still in production for the whole window, and that bill accrues daily while nobody counts it.
 - Trunk is half-migrated, and other people write code against the half-migrated version.
-- Every piece you add makes the window longer. Each one waits for a reviewer to pick it up, load the context and answer, and they run one after another because each depends on the one before it. Where your organisation ties merging to releasing, each piece waits for a release slot as well, and six release slots is months. Where merging and releasing come apart, it is only the reviews you are waiting on. Merging is not releasing.
+- Every piece you add makes the window longer. Each one waits for a reviewer to pick it up, load the context and answer, and they run one after another because each depends on the one before it. Where your organisation ties merging to releasing, each piece waits for a release slot as well, and six release slots is months. Where merging and releasing come apart, it is only the reviews you are waiting on. Merging is not releasing. Beck makes the same point about fixed review and deployment costs, as one side of his batch-size trade-off.
 - Some of that length is work you would not otherwise do. Each piece has to compile and pass on its own, so you sometimes write scaffolding whose only job is to hold the intermediate state together until the last piece lands, and which you then delete.
 - The window may never close. Priorities move, authors change teams, a board says no. This is the only genuine risk on the page. Everything else here is a certainty you are choosing.
 
@@ -314,55 +322,56 @@ Three benefits, one condition, and the costs don't care either way.
 
 ## When do you do it?
 
-This only comes up if the restructuring can be separated. In Case C there is nothing to decide, because the restructuring is the fix.
+This only comes up if the restructuring can be separated. In Case C there is nothing to decide, because the restructuring is the fix. Before asking how tightly the refactoring is coupled to the change, make sure it is a refactoring at all. Sometimes what looks like preparation is the change itself.
 
-<span class="marginnote" id="note-tweet">Beck himself gives four, not three. *Tidy First?* (2023) answers this question with tidy first, tidy after, tidy later, or tidy never. The tweet everybody quotes gives one. The book came eleven years later and is quoted far less.</span><span data-note="note-tweet">Three answers.</span>
+<span class="marginnote" id="note-tweet">The tweet everybody quotes gives one answer. *Tidy First?* (2023), eleven years later, gives these four, and is quoted far less.</span>Beck gives <span data-note="note-tweet">four answers</span>, and they're the right place to start.
 
-- **Restructure first**, then fix. This is the advice everybody quotes.
-- **Fix first**, in the code as it stands, and tidy up afterwards as debt.
-- **Interleaved**, restructuring and fixing as one piece of work.
+- **First.** Refactor, then make the change. The advice everybody quotes.
+- **After.** Make the change, then refactor straight away, in the same piece of work.
+- **Later.** Make the change, and come back to the refactoring as a separate task. Beck keeps a list of these; most teams would call it debt.
+- **Never.** Already answered by the first question: the refactoring doesn't pay for itself.
 
 This is purely about the order you do the work in. It says nothing yet about what you hand anybody, which is the next question and is not the same question. Keep them apart in your head for a few paragraphs; the whole argument turns on it.
 
-Worth noticing that Fowler already draws fix-first, just not for this workflow. His flow for litter-pickup and comprehension refactoring has a decision box asking "fix now?", and the "no" branch is finish the feature first, then clean up. Two branches, both ending clean.
+Beck's *after* and *later* both put the change first. Fowler draws the same option, just not for this workflow. His flow for litter-pickup and comprehension refactoring has a decision box asking "fix now?", and the "no" branch is finish the feature first, then clean up. Two branches, both ending clean.
 
 His flow for preparatory refactoring has no such box. It asks "good fit?", and if the answer is no you refactor, then add the feature. There is no branch where you add the feature first and restructure afterwards.
 
 I don't think that asymmetry is deliberate. It just follows from how preparatory refactoring is framed; the whole idea is that the restructuring makes the change easy, so doing the change first sounds like giving up the point. It isn't, and the rest of this section is about why.
 
-**In Case B, restructuring first is off the table.** Everything you get from keeping them apart goes to zero at once, and for the same reason.
+**In Case B, the refactoring can't go ahead of the change on its own.** Everything you get from keeping them apart goes to zero at once, and for the same reason.
 
 - A reviewer can't judge it. They follow every line and still have nothing to judge it against.
 - Keeping it through a revert buys nothing. A seam with no consumer is worth nothing alone, which is what put you in Case B.
 - Nobody is waiting on it. Nothing can consume it until the fix exists.
 
-The costs are identical to Case A. So you pay the full bill and get nothing back. That leaves interleaved, or fix-first. And fix-first has a property worth having here: do it and you find out whether you ever wanted the seam at all. Often you won't.
+The costs are identical to Case A. So you pay the full bill and get nothing back. That leaves first or after, in the same piece of work as the change, or later. And changing first has a property worth having here: do it and you find out whether you ever wanted the seam at all. Often you won't.
 
 **In Case A all three are live.** Here is what moves the answer.
 
 | What you're looking at | Code or company | Pushes toward |
 |---|---|---|
-| The bug is live and costing money right now | Company | Fix first |
-| You don't yet know what the end structure should be | Code | Fix first |
-| Writing the fix in the current structure is error-prone | Code | Restructure first |
-| Somebody else is blocked on the new structure | Company | Restructure first |
-| Test coverage over the touched code is thin | Code | Interleaved |
-| The restructuring is small | Code | Interleaved |
+| The change is urgent, like a live bug costing money | Company | After or later |
+| You don't yet know what the end structure should be | Code | After, or later if the tidying is big |
+| The change is error-prone in the current code | Code | First |
+| Somebody else is waiting on the refactoring | Company | First |
+| Test coverage over that code is thin | Code | After |
+| The refactoring is small | Code | First or after |
 
 The middle column is worth a moment. Four of those rows are facts about your code and you can look them up. Two are facts about your company and they are different in every building. That is why this question has no universal answer, and why anybody who hands you one is generalising from their own office.
 
 Two rows carry more weight than the rest.
 
-**Urgency, because the failure modes are not symmetric.** Either order can be abandoned halfway. The bills are different.
+**Urgency, because the failure modes are not symmetric.** Either plan can be left unfinished. The bills are different.
 
-- Restructure first and abandon at step four; the bug is still live, and trunk is left in a shape nobody designed.
-- Fix first and never get to the tidying; the bug is fixed, and you owe some debt.
+- **First**, abandoned at step four: the bug is still live, and trunk is left in a shape nobody designed.
+- **Later**, never done: the bug is fixed, and you owe some debt.
 
-Same risk, one fails safe and one doesn't. That is the strongest argument for fixing first and almost nobody makes it.
+Same risk, one fails safe and one doesn't. Beck lists after and later as options, for reasons of cost, payoff and learning. None of his reasons is about what you're left with if the work stops halfway.
 
-**Coverage, because the fix's test is doing more work than it looks.** That test is what exercises the restructured code. Keep them together and the restructuring is checked at merge time. Split them and the restructuring lands on whatever coverage already existed, which in the code you most want to restructure is usually the thinnest coverage you own.
+**Coverage, because the fix's test is doing more work than it looks.** That test is what exercises the restructured code. Make the change first and its test is already there when you refactor, so the refactoring is checked as you go. Refactor first in a pull request of its own and the refactoring lands on whatever coverage already existed, which in the code you most want to restructure is usually the thinnest coverage you own.
 
-And the honest costs of fixing first, since they are real. The tidying probably never happens, because "later" is where work goes to die and a cleanup with no urgency loses every prioritisation argument it enters. You write the hack, then the clean version, then delete the hack, which is more total work. And fixing inside bad structure is more error-prone, which is the whole reason Beck's advice exists in the first place.
+And the honest costs of changing first, since they are real. With *later*, the refactoring often never happens. Beck disagrees: he says later works, on one condition, that the team believes it has enough time to do its work. That's a fact about the company, not the code, and in a lot of companies it isn't true. There, a cleanup with no urgency loses every prioritisation argument it enters. You write the hack, then the clean version, then delete the hack, which is more total work. And fixing inside bad structure is more error-prone, which is the whole reason Beck's advice exists in the first place.
 
 ## How is it packaged?
 
@@ -370,13 +379,13 @@ Here is the step nearly everybody skips. Having settled the order you'll work in
 
 | | One pull request, one diff | One pull request, ordered commits | Separate pull requests |
 |---|---|---|---|
-| **Restructure first** | works | usually the answer | the thing everybody argues about |
-| **Fix first** | works | works | works, as debt later |
-| **Interleaved** | works | works | not possible |
+| **First** | works | the default for Case B | Beck's default, and the thing everybody argues about |
+| **After** | works | works | works |
+| **Later** | not possible | not possible | the only option |
 
-Nearly every cell is populated. Work order does not determine packaging.
+Only *later* forces the answer. For first and after, the order you work in doesn't decide what you hand over.
 
-Which matters, because the advice we started with runs the two together. "Make the change easy, then make the easy change" is a claim about work order. "Put the restructuring in its own pull request" is a claim about packaging. The second is offered as though it followed from the first, and it doesn't. Restructure-first in one pull request is an ordinary cell, and it's the one that wins.
+Which matters, because the advice we started with runs the two together. "Make the change easy, then make the easy change" is a claim about work order. "Put the restructuring in its own pull request" is a claim about packaging. The LinkedIn post offers the second as though it followed from the first, and it doesn't. Beck does argue for separate pull requests, but on grounds of their own, and those grounds assume the refactoring can be judged on its own. First, in one pull request, is an ordinary cell, and in Case B it's the one that wins.
 
 Now look again at the case for keeping them apart. Nearly every argument on that list was about small, ordered, separately-readable steps. Not one of them was about separate pull requests. **You collect the benefits at commit granularity. You pay the costs at pull request granularity.** That is the whole of it.
 
@@ -423,15 +432,15 @@ Two limits are worth stating plainly, since they bound what the study can be use
 
 Same merge, same change record, same window of zero. But each step stays small, the shape of the whole stays visible because it is all in one place, and reverting one commit is an ordinary operation. It is the only option that keeps both halves of the reading problem, and it keeps selective undo as well.
 
-It is also, as far as I can tell, what Beck is actually describing. Small steps, one hat at a time, each one verified. None of that requires a second pull request.
+Beck mentions this option too, as a fallback: if separate pull requests are too costly to review, at least keep structure and behaviour in separate commits. For Case B I'd put it first, not second.
 
 I should be honest about the gap in that claim. The experiment above tested separate pull requests, not ordered commits within one. The closest evidence is Baum, Schneider and Bacchelli, who tried the same idea one level down. They cut a change into parts, showed those parts to fifty reviewers in different orders, and measured how fast defects were found. The result went the way they predicted, but the groups were too small to confirm it. So ordering is not untested. It was tested, the study was too small to settle it, and what it tested was the order of parts inside one review, not commits that each carry their own message and their own approval. Nobody has tested that. And per-commit review in most tools is a worse experience than reviewing separate pull requests. That's a tooling deficiency rather than a property of the idea, but a tooling deficiency you have to live with is still a real cost.
 
 ## Why the argument never resolves
 
-Go back to the four questions. The advice arrives with the second one never asked and the fourth one smuggled in, and practitioners inherit that and argue downstream of it. Nobody says which question they are answering, and half the time the two people are not even in the same case.
+Go back to the four questions. The advice usually arrives as Beck's one-line tweet, with the second question never asked and the fourth one smuggled in, and practitioners inherit that and argue downstream of it. Nobody says which question they are answering, and half the time the two people are not even in the same case.
 
-The person advocating a preparatory series has answered "when" with restructure-first, and then silently answered "how is it packaged" with separate pull requests, usually without asking whether it can be separated at all. On reviewability they are right, with evidence behind them.
+The person advocating a preparatory series has answered "when" with first, and "how is it packaged" with separate pull requests, which is what Beck recommends, usually without asking whether the refactoring can be judged on its own. On reviewability they are right, with evidence behind them.
 
 The person in an enterprise saying it will never be approved is naming release cost, which is a different row of the same table. They are right too. It is not process obstruction. A change board asks what changes, what the blast radius is, and what the rollback is. A preparatory refactoring answers "nothing changes for the user", which is simultaneously unverifiable and unrewarding, and you're requesting risk budget for zero delivered value, several times over. Rejecting that is a correct response to how it was presented.
 
@@ -447,13 +456,15 @@ That's the pattern. People argue about the questions that depend on where they w
 
 ## Why you cannot just weigh these up
 
-So why is any of this hard? Whether it can be separated is a fact you look up. When to do it is a table with eight rows. That is an ordinary engineering situation. You weigh it and you decide.
+So why is any of this hard? Whether it can be separated is a fact you look up. When to do it is a table with six rows. That is an ordinary engineering situation. You weigh it and you decide.
 
 Except you cannot, because the tool will not let you decide these things separately.
 
 Here is the cleanest way I can put it. Deciding how to hand work to a reviewer should be a question about the code and the reader; how big it is, what it claims, whether a human can hold it. Deciding what reaches production and when should be a question about the company; blast radius, rollback, who signs. Two different kinds of force, and they should pull two different levers.
 
 The pull request is one lever. So a change board's release policy ends up deciding how somebody reads a diff, and a reviewer's attention span ends up deciding what ships. Neither of those should be true.
+
+Beck has noticed the same problem from the other side. His answer to expensive reviews is to stop requiring review for tidying-only changes. That fixes a lever that's too coarse, and for Case A it's a good fix: a tidying that explains itself doesn't need a gatekeeper. For Case B it's the wrong one. A structure with no visible purpose then merges with nobody asking why.
 
 Step back from the benefits and costs for a moment and look at what is actually being sized. Four different things, and something different sets the natural size of each. What the tests cover. What a reviewer can hold at once. What one release covers, sized by blast radius and rollback policy. What counts as a delivered outcome. Underneath all four sits the commit, i.e. the granularity at which work gets recorded, which is substrate rather than a fifth unit.
 
@@ -503,17 +514,18 @@ Three questions, in order, assuming you've already decided the restructuring is 
 
 - Can't write the fix without it. Case C. It is the fix. Ship them as one thing and stop thinking about it.
 - Can, and it earns a yes on its own. Case A. Next question.
-- Can, but it only makes sense because of the fix. Case B. Either do it as one change, or fix first and find out whether you ever wanted it.
+- Can, but it only makes sense because of the fix. Case B. Either do it in the same piece of work as the change, first or after, or leave it for later and find out whether you ever wanted it.
 
 **What order do you work in?**
 
-- Bug live, or you don't yet know the right end structure: fix first, tidy after.
-- Somebody blocked on the new structure, or the fix is dangerous to write in the current one: restructure first.
-- Neither, and the restructuring is small, or coverage is thin: interleave them.
+- The change is urgent: after or later. You don't yet know the end structure: after, or later if the tidying is big.
+- Somebody is waiting on the refactoring, or the change is error-prone in the current code: first.
+- Coverage is thin: after, so the change's test is there when you refactor.
+- The refactoring is small: first or after, whichever is easier.
 
-**What do you hand over?** Almost always one pull request, with ordered commits rather than one undifferentiated diff. It costs nothing and it buys back most of what separate pull requests were supposed to give you. Separate pull requests earn their keep only when somebody else is genuinely blocked on the restructuring landing early.
+**What do you hand over?** In Case A, Beck's advice holds: the refactoring can go in its own pull request, because a reviewer can judge it on its own. In Case B it can't be judged on its own, so hand over one pull request with ordered commits rather than one undifferentiated diff.
 
-Notice that the last question has its own answer. It is not read off the one before it, which is the mistake the advice makes. Restructure first and hand over one pull request is a perfectly ordinary way to work, and almost nobody names it as an option.
+Notice that the last question has its own answer. It is not read off the one before it, which is the mistake the advice makes. Refactor first and hand over one pull request is a perfectly ordinary way to work. Beck names it only as a fallback; for Case B it should be the default.
 
 And notice what is doing the work in that last step. Ordered commits go unused mostly because the tool welds review granularity to merge granularity so tightly that they feel like a single decision.
 
