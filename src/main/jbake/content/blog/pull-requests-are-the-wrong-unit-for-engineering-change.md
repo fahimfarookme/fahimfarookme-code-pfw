@@ -8,7 +8,7 @@ subtitle=On preparatory refactoring, and the decision your tooling makes for you
 description=Preparatory refactoring is four decisions, not one - whether it pays off, how tightly it is bound to the fix, what order to work in, and what you hand a reviewer.
 ~~~~~~
 
-<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br><br>Yegor Bugayenko, *Angry Tests* (2024)</span>
+<span class="marginnote" id="note-yegor">"In a large codebase with legacy code, where every fix may require preliminary refactorings in a number of places, we don't do them all in a single PR. Instead, we make a series of them, with refactorings and code polishing, until the broken place is fully ready for a small change that is easy to review and understand. As Kent Beck once said, 'make the change easy, then make the easy change.'"<br>Angry Tests</span>
 
 Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) <span data-note="note-yegor">LinkedIn post</span> recently, where Yegor Bugayenko introduces the idea of putting preparatory refactoring into its own pull request, or a series of pull requests.
 
@@ -20,10 +20,10 @@ It raised several questions in my mind about the <span data-note="note-refactori
 3. When should the refactoring be done?
 4. How should the refactoring be packaged?
 
-<span class="marginnote" id="who-answers-what">I have not read everything they have written, so this is based on what I have seen. Let me know if I have got it wrong.</span><span data-note="who-answers-what">Here is who answers what.</span>
-
-<span class="marginnote" id="beck-imply-business">Beck asks: <i>Is there enough time to do your work?</i> in deciding <i>later</i>. I'm not sure if he meant the business urgency here.</span>
+<span class="marginnote" id="who-answers-what">I have not read everything they have written, so this is based on what I have seen. Let me know if I have got it wrong.</span>
+<span data-note="who-answers-what">Here is who answers what.</span>
 <span class="marginnote" id="first-after-later">Later: when no immediate payoff and can be done incrementally.<br/>After: otherwise makes the change incomplete or makes the next change more expensiv.</br>First: when the payoff is immediate</span>
+<span class="marginnote" id="beck-imply-business">Beck asks: <i>Is there enough time to do your work?</i> in deciding <i>later</i>. I'm not sure if he meant the business urgency here.</span>
 
 | Question | Who answers it | What they say | What's missing |
 |---|---|---|---|
