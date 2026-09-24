@@ -730,6 +730,12 @@ hr {
     padding: 1px 3px;
 }
 
+/* A note on its own source line ends in a line break. The note itself leaves the
+   flow, so that break would show up as an empty line in the main column. */
+.marginnote + br {
+    display: none;
+}
+
 /* Linked sidenotes - dotted underline on phrases, yellow highlight on hover */
 [data-note] {
     border-bottom: 1px dotted var(--color-grey-light);
