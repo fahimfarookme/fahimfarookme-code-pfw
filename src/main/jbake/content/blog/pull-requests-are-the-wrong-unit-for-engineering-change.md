@@ -13,7 +13,7 @@ description=Preparatory refactoring is four decisions, not one - whether it pays
 Kent Beck says ["Make the change easy, then make the easy change"](https://x.com/KentBeck/status/250733358307500032). Martin Fowler defines the "make the change easy" part as [Preparatory Refactoring](https://martinfowler.com/articles/preparatory-refactoring-example.html) which shall preserve existing behaviour. I came across [this](https://www.linkedin.com/posts/yegor256_in-a-large-codebase-with-legacy-code-where-activity-7502126973662715904-oPa0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAu9hMABzjpBHYxSNdNNMdzDzVwUvQTqw2s) <span data-note="note-yegor">LinkedIn post</span> recently, where Yegor Bugayenko introduces the idea of putting preparatory refactoring into its own series of pull requests.
 
 <span class="marginnote" id="note-refactoring-change">I use <i>refactoring</i> to refer to the preparatory work, whether behaviour-preserving or not and <i>change</i> to refer to the original intended change, either a bug fix or a feature.</span>
-It raised several questions in my mind about the <span data-note="note-refactoring-change"><i>refactoring</i></span> and the <i>change</i>, and about whether this advice is complete.
+It raised several questions in my mind about the <span data-note="note-refactoring-change"><i>refactoring</i></span> and the <span data-note="note-refactoring-change"><i>change</i></span>, and about whether this advice is complete.
 
 1. How far is the refactoring worth doing?
 2. How tightly is the refactoring coupled to the change?
@@ -36,11 +36,23 @@ In essence, none of these are purely about the code, which is a major gap in the
 
 ## Will it pay for itself?
 
-<span class="marginnote" id="note-econ">Fowler files this under "Is refactoring wasteful rework?" in *Workflows of Refactoring*, next to two instructions people quote far less often: balance refactoring with feature delivery, and don't try to fix things completely.</span>Fowler's answer is the right one. Don't restructure unless you expect to <span data-note="note-econ">get that time back</span> later, through work that goes quicker because you did. The strongest version is reuse; the seam you add now helps the next change too, so you aren't paying for one change, you're paying for several.
+<span class="marginnote" id="note-prep">The whole passage, from the preparatory refactoring slide of *Workflows of Refactoring*: "Often you start working on adding new functionality and you realize the existing structures don't play well with what you're about to do. In this situation it usually pays to begin by refactoring the existing code into the shape you now know is the right shape for what you're about to do."</span>Write the sum down and it stops being a matter of taste. Call $T_X$ the time to make the change in the code as it stands, $T_R$ the time to refactor, and $T_C$ the time to make the change once the refactoring has landed. <span data-note="note-prep">Fowler's test</span> is whether "the overall change is faster than if you tried to add the change without the preparation", which is
 
-Notice what sits on the benefit side. You are doing the fix anyway, so the fix's own payoff is already in the sum, and with it in there the answer comes out yes most of the time. Which makes the cases where it still says no the interesting ones.
+$$T_R + T_C < T_X$$
 
-And the rule works. For preparatory refactoring he makes the comparison explicit: refactoring first and then making the change is often faster overall than making the change without the refactoring. Run that on the VAT bug honestly. The one-line conditional is ten minutes. The `TaxRule` seam plus the fix is two hours. You are not getting an hour and fifty minutes back, so the rule tells you not to bother, and the rule is right.
+That rearranges to
+
+$$T_R < T_X - T_C$$
+
+The change sits on both sides and cancels out. What is left says the refactoring has to cost less than the time it saves on this one change. Two things follow. The refactoring can never be worth more than the change would have cost you without it. And the sum comes out yes exactly when the current shape makes the change expensive, which is the case Fowler scopes his advice to, where the existing structures don't play well with what you're about to do.
+
+Notice what is not in that sum. Reuse isn't. If the new structure also speeds up changes that haven't arrived yet, those savings are $\sum S_i$ and the test becomes
+
+$$T_R < (T_X - T_C) + \sum S_i$$
+
+Fowler's preparatory claim never needs that term. The payoff he names is this change, today. Reuse is the argument behind his other workflows, where clean code makes later work cheaper, and it is the only term in the sum nobody can check.
+
+And the rule works. Run it on the VAT bug honestly. The one-line conditional is ten minutes, so $T_X$ is ten minutes. The `TaxRule` seam plus the fix is two hours. You are not getting an hour and fifty minutes back, so the rule tells you not to bother, and the rule is right.
 
 What it cannot tell you is anything about the rest of this post, and it's worth being exact about where the edge sits.
 
