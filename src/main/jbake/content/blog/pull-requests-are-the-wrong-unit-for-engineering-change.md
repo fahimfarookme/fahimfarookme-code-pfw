@@ -38,9 +38,9 @@ In essence, none of these are purely about the code, which is a major gap in the
 
 Fowler's answer, from the preparatory refactoring slide of *Workflows of Refactoring*:
 
-> Often you start working on adding new functionality and you realize the existing structures don't play well with what you're about to do. In this situation it usually pays to begin by refactoring the existing code into the shape you now know is the right shape for what you're about to do.
+> Often you start working on adding new functionality and you realize the existing structures don't play well with what you're about to do. In this situation it usually pays to begin by refactoring the existing code into the shape you now know is the right shape for what you're about to do. By making this change with your refactoring hat on, you can make the new functionality change much easier. **Often this pays off to the the [sic] level that the overall change is faster than if you tried to add the change without the preparation.**
 
-Write the sum down and it stops being a matter of taste. Call $T_X$ the time to make the change in the code as it stands, $T_R$ the time to refactor, and $T_C$ the time to make the change once the refactoring has landed. His test is whether "the overall change is faster than if you tried to add the change without the preparation", which is
+That last sentence is the test. Write it down and it stops being a matter of taste. Call $T_X$ the time to make the change in the code as it stands, $T_R$ the time to refactor, and $T_C$ the time to make the change once the refactoring has landed. Faster overall means
 
 $$T_R + T_C < T_X$$
 
