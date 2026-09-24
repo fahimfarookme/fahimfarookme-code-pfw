@@ -30,15 +30,15 @@ It raised several questions in my mind about the <span data-note="note-refactori
 | Worth? | Fowler, Beck | Fowler: only if the time you spend refactoring comes back later as quicker change.</br>Beck: never refactor, if the code won't change again or there's nothing to learn from tidying it. | Fowler's measure is time saved, and specifically coding time. Beck aditionally count's code author's learning. Code review and the rest of delivery are not counted by either. |
 | Coupled? | Nobody | | Does the refactoring make sense even if the change never happens? |
 | When? | Fowler, Beck, Yegor | Fowler, Yegor: Refactor before the change<br/>Beck: <span data-note="first-after-later">First, after, or later</span>  | Both decide from the perspective of the code author. <span data-note="beck-imply-business">Neither weighs how urgent the change is for the business</span> |
-| Packaging? | Beck, Yegor | Beck: sstructure (refactoring) and behaviour (change) in separate pull requests<br/>Yegor:  a series of refactoring pull requests, then the change in the last one  | Assumes the refactoring pull request can be reasoned without seeing the change. The author knows why, but the reviewer doesn't. |
+| Packaging? | Beck, Yegor | Beck: structure (refactoring) and behaviour (change) in separate pull requests<br/>Yegor:  a series of refactoring pull requests, then the change in the last one  | Assumes the refactoring pull request can be reasoned without seeing the change. The author knows why, but the reviewer doesn't. |
 
-Those first two questions are easy to run together, so it's worth being clear about the difference. "Will it pay for itself" counts the fix as payoff, which is why Fowler's answer is usually yes. "How tightly is it bound" asks whether anybody other than you could tell why you did it. A seam can pay for itself handsomely and still be unreadable to the next person, and that combination is where all the trouble is.
-
-One more thing about the four before we start. Only the second one is purely about the code. You answer it by reading the diff, and for a given change it has one right answer that doesn't depend on where you work. The other three all depend on your company; how expensive your releases are, how urgent this bug is, who is waiting on you. Which makes it odd that the second one is the one nobody asks.
+In essence, none of these are purely about the code, which is a major gap in the advice given above. The best decision will take into account many variables other than code, such as how expensive your releases are, how urgent this change is, and who is waiting for the change. 
 
 ## Will it pay for itself?
 
 <span class="marginnote" id="note-econ">Fowler files this under "Is refactoring wasteful rework?" in *Workflows of Refactoring*, next to two instructions people quote far less often: balance refactoring with feature delivery, and don't try to fix things completely.</span>Fowler's answer is the right one. Don't restructure unless you expect to <span data-note="note-econ">get that time back</span> later, through work that goes quicker because you did. The strongest version is reuse; the seam you add now helps the next change too, so you aren't paying for one change, you're paying for several.
+
+Notice what sits on the benefit side. You are doing the fix anyway, so the fix's own payoff is already in the sum, and with it in there the answer comes out yes most of the time. Which makes the cases where it still says no the interesting ones.
 
 And the rule works. For preparatory refactoring he makes the comparison explicit: refactoring first and then making the change is often faster overall than making the change without the refactoring. Run that on the VAT bug honestly. The one-line conditional is ten minutes. The `TaxRule` seam plus the fix is two hours. You are not getting an hour and fifty minutes back, so the rule tells you not to bother, and the rule is right.
 
@@ -68,9 +68,11 @@ There's one answer that looks like a yes and isn't, and it's the interesting one
 
 One caution on reuse, since it's the argument people lean on hardest. Nobody has measured how often the second consumer actually turns up. Until somebody does, it's a forecast, not a benefit.
 
+And a no here doesn't always mean never. A tidy that doesn't pay today, and that nobody is waiting on, goes on a list rather than into a pull request. Beck's *never* is the harder version of that, for code that won't change again at all.
+
 ## How tightly is the restructuring bound to the fix?
 
-Three answers, and they are visible in code, so let's start there.
+Three answers. Start in the code, because that is where the reviewer starts, then come back to the levels a diff doesn't show.
 
 ### Case A: the refactoring stands on its own
 
@@ -259,11 +261,32 @@ Same category; reordering who takes which lock to break a deadlock, or moving a 
 
 **Can you write the fix without changing the structure?** If you can't, you're in Case C and there is nothing to decide. Ship them together, because they are the same thing.
 
-**Cover the fix with your hand and read the restructuring.** If it still earns a yes, you're in Case A. If that yes depends on something that is not in the diff, you're in Case B.
+**Cover the fix with your hand and read the restructuring.** If it still earns a yes, you're in Case A. If that yes depends on something that is not in the diff, you're in Case B. Ask it once per audience. A reviewer reads the diff, a designer reads the journey, whoever owns the published contract reads its shape. Case A means it earns a yes from all of them, not only from the person who approves the pull request.
 
 Ask them in that order. Most arguments about preparatory refactoring are between two people who never asked the first question and are in different cases without knowing it.
 
+Both questions assume the diff is the only place to look. It isn't.
+
+Say the change adds save-and-finish-later to a three-step checkout, and the preparation pulls the three step footers into one shared component. A reviewer sees three near-identical blocks become one with every handler unchanged, and approves it without ever hearing about the change. Case A. A designer sees that step two, which had Continue on the left after years of drift, now has it on the right like the others, and that the only reason to touch it was to make room for the third button the change needs. Case B. Same diff, and the reader who can tell is the one who never sees the pull request.
+
+Coupling hides at three more levels the diff doesn't show.
+
+- **The published contract.** Field nullability, error codes, event schemas. Clients that already shipped make the restructuring safe only once the fix lands.
+- **Runtime behaviour.** Extracting a retry helper standardises backoff. A user sees a slower spinner, and a payment gateway sees a second attempt that falls outside its deduplication window.
+- **Data and operations.** Migrations that have to run before or after, and dashboards and alerts keyed on names you have just changed.
+
+<span class="marginnote" id="note-observable">Fowler's definition in full: <i>a change made to the internal structure of software to make it easier to understand and cheaper to modify without changing its observable behavior</i>, refactoring.com.</span>Fowler has refactoring change the internal structure <span data-note="note-observable">without changing its observable behaviour</span>, and never says observable to whom. A reviewer observes the code. These other observers don't read pull requests.
+
 Standalone value is really a spectrum, not two boxes. It behaves like two boxes anyway, because the thing it feeds is a reviewer deciding whether to approve, and that is a yes or a no.
+
+Put this question beside the first one and there are four cases, not two.
+
+| | Stands on its own | Only makes sense with the fix |
+|---|---|---|
+| **Pays for itself** | Case A. Everything you get from splitting is live here. | Case B. It can pay handsomely and still be unreadable to the next person, and that pair is where the argument gets stuck. |
+| **Doesn't pay** | Not now. It goes on a list, or nowhere at all if the code won't change again. | Don't build it. The one-line VAT fix is this cell: the seam was never required. |
+
+Case C isn't in the grid. It is the gate in front of it, which is why the first question comes first.
 
 ## The case for keeping them apart
 
@@ -510,7 +533,7 @@ Most of the tooling in this space is aimed at making splitting easier to do. I'm
 
 Three questions, in order, assuming you've already decided the restructuring is worth doing.
 
-**How tightly is it bound to the fix? Read the code.**
+**How tightly is it bound to the fix? Read the code, then the levels it doesn't show.**
 
 - Can't write the fix without it. Case C. It is the fix. Ship them as one thing and stop thinking about it.
 - Can, and it earns a yes on its own. Case A. Next question.
@@ -543,4 +566,5 @@ They are not a single decision. And when you catch yourself designing a workflow
 - Sadowski, C., Söderberg, E., Church, L., Sipko, M. and Bacchelli, A. (2018). *Modern code review: a case study at Google.* ICSE-SEIP '18.
 - Beck, K. (2023). *Tidy First?* O'Reilly. In particular the chapters on separate tidying, batch sizes, and first/after/later/never.
 - Fowler, M. (2014). *Workflows of Refactoring.* martinfowler.com. The six workflows, the two hats, and the economic justification.
+- Fowler, M. *Refactoring: definition.* refactoring.com. "Without changing its observable behavior", with no observer named.
 - Fowler, M. *An Example of Preparatory Refactoring.* martinfowler.com.
