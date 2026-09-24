@@ -36,7 +36,11 @@ In essence, none of these are purely about the code, which is a major gap in the
 
 ## Will it pay for itself?
 
-<span class="marginnote" id="note-prep">The whole passage, from the preparatory refactoring slide of *Workflows of Refactoring*: "Often you start working on adding new functionality and you realize the existing structures don't play well with what you're about to do. In this situation it usually pays to begin by refactoring the existing code into the shape you now know is the right shape for what you're about to do."</span>Write the sum down and it stops being a matter of taste. Call $T_X$ the time to make the change in the code as it stands, $T_R$ the time to refactor, and $T_C$ the time to make the change once the refactoring has landed. <span data-note="note-prep">Fowler's test</span> is whether "the overall change is faster than if you tried to add the change without the preparation", which is
+Fowler's answer, from the preparatory refactoring slide of *Workflows of Refactoring*:
+
+> Often you start working on adding new functionality and you realize the existing structures don't play well with what you're about to do. In this situation it usually pays to begin by refactoring the existing code into the shape you now know is the right shape for what you're about to do.
+
+Write the sum down and it stops being a matter of taste. Call $T_X$ the time to make the change in the code as it stands, $T_R$ the time to refactor, and $T_C$ the time to make the change once the refactoring has landed. His test is whether "the overall change is faster than if you tried to add the change without the preparation", which is
 
 $$T_R + T_C < T_X$$
 
