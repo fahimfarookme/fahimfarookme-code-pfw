@@ -21,7 +21,7 @@ It raised several questions in my mind about the <span data-note="note-refactori
 4. How should the refactoring be packaged?
 
 <span class="marginnote" id="who-answers-what">I have not read everything they have written, so this is based on what I have seen. Let me know if I have got it wrong.</span>
-<span class="marginnote" id="first-after-later">Later: when no immediate payoff and can be done incrementally.<br/>After: otherwise makes the change incomplete or makes the next change more expensiv.</br>First: when the payoff is immediate</span>
+<span class="marginnote" id="first-after-later">Later: when no immediate payoff and can be done incrementally.<br/>After: otherwise makes the change incomplete or makes the next change more expensive.</br>First: when the payoff is immediate</span>
 <span class="marginnote" id="beck-imply-business">Beck asks: <i>Is there enough time to do your work?</i> in deciding <i>later</i>. I'm not sure if he meant the business urgency here.</span>
 <span data-note="who-answers-what">Here is who answers what.</span>
 
@@ -30,7 +30,7 @@ It raised several questions in my mind about the <span data-note="note-refactori
 | Worth? | Fowler, Beck | Fowler: only if the time you spend refactoring comes back later as quicker change.</br>Beck: never refactor, if the code won't change again or there's nothing to learn from tidying it. | Fowler's measure is time saved, and specifically coding time. Beck aditionally count's code author's learning. Code review and the rest of delivery are not counted by either. |
 | Coupled? | Nobody | | Does the refactoring make sense even if the change never happens? |
 | When? | Fowler, Beck, Yegor | Fowler, Yegor: Refactor before the change<br/>Beck: <span data-note="first-after-later">First, after, or later</span>  | Both decide from the perspective of the code author. <span data-note="beck-imply-business">Neither weighs how urgent the change is for the business</span> |
-| Packaging? | Beck, Yegor | Beck: sstructure (refactoring) and behaviour (change) in separate pull requests<br/>Yegor:  a series of refactoring pull requests, then the change in the last one  | Assumes the refactoring pull request can be reasoned without seeing the change. The author knows why, the reviewer doesn't. |
+| Packaging? | Beck, Yegor | Beck: sstructure (refactoring) and behaviour (change) in separate pull requests<br/>Yegor:  a series of refactoring pull requests, then the change in the last one  | Assumes the refactoring pull request can be reasoned without seeing the change. The author knows why, but the reviewer doesn't. |
 
 Those first two questions are easy to run together, so it's worth being clear about the difference. "Will it pay for itself" counts the fix as payoff, which is why Fowler's answer is usually yes. "How tightly is it bound" asks whether anybody other than you could tell why you did it. A seam can pay for itself handsomely and still be unreadable to the next person, and that combination is where all the trouble is.
 
